@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InputManager : MonoBehaviour {
+public class GameInputManager : MonoBehaviour {
     private void Update() {
-        if (Input.GetKey(KeyCode.Z)) {
+        if (Input.GetKeyDown(KeyCode.Z)) {
             Debug.Log("z");
         }
 
-        if (Input.GetKey(KeyCode.X)) {
-            Debug.Log("z");
+        if (Input.GetKeyDown(KeyCode.X)) {
+            Debug.Log("x");
         }
     }
 }

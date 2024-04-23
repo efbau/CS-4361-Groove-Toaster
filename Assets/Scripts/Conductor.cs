@@ -16,8 +16,7 @@ public class Conductor : MonoBehaviour
     private float deltaSongPosition;
     private AudioSource musicSource;
 
-    // Start is called before the first frame update
-    private void Start() {
+    private void Awake() {
         //load AudioSource
         musicSource = GetComponent<AudioSource>();
 
@@ -29,7 +28,10 @@ public class Conductor : MonoBehaviour
         offset = 3.356f;
         beatDuration = 60f/bpm;
         beatsPerBar = 4f;
-        
+    }
+
+    // Start is called before the first frame update
+    private void Start() {
         //start music
         musicSource.Play();
     }
