@@ -36,7 +36,7 @@ public class TappableObject : MonoBehaviour
 
     private void CheckTap()
     {
-        if (Conductor.instance.checkBeat(beat))
+        if (Conductor.instance.checkBeat(beat) > 0)
         {
             // Stop listening once you get a hit
             Deactivate();
@@ -50,5 +50,15 @@ public class TappableObject : MonoBehaviour
             // Display miss animation
         }
         NoteManager.instance.ResetNotes();
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        if (!didHit)
+        {
+            NoteManager.instance.ResetNotes();
+            Debug.Log("Miss - Late!");
+            // -10 points
+        }
     }
 }

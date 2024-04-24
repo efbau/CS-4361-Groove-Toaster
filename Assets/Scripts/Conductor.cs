@@ -19,6 +19,7 @@ public class Conductor : MonoBehaviour
     private float goodThreshold;
     private float perfectThreshold;
     private bool paused = false;
+    private float pauseTime;
 
     private static Conductor _instance;
 
@@ -62,8 +63,11 @@ public class Conductor : MonoBehaviour
 
     //updates current song position (in beats and seconds) on every frame
     private void Update() {
-        songPosition = (float)(AudioSettings.dspTime - dspTimeOnPlay) - offset;
-        songPositionInBeats = songPosition / beatDuration;
+        if (!paused)
+        {
+            songPosition = (float)(AudioSettings.dspTime - dspTimeOnPlay) - offset;
+            songPositionInBeats = songPosition / beatDuration;
+        }
     }
 
     private void Reset()
@@ -73,7 +77,7 @@ public class Conductor : MonoBehaviour
         dspTimeOnPlay = (float)AudioSettings.dspTime;
         if (paused)
         {
-            EventManager.StopListening("unpause", Pause);
+            EventManager.StopListening("unpause", UnPause);
             EventManager.StartListening("pause", Pause);
             paused = false;
         }
@@ -83,7 +87,8 @@ public class Conductor : MonoBehaviour
     private void Pause()
     {
         paused = true;
-        musicSource.Pause(); 
+        musicSource.Pause();
+        pauseTime = (float)AudioSettings.dspTime;
         EventManager.StopListening("pause", Pause);
         EventManager.StartListening("unpause", UnPause);
     }
@@ -91,6 +96,7 @@ public class Conductor : MonoBehaviour
     {
         paused = false;
         musicSource.Play();
+        dspTimeOnPlay += (float)AudioSettings.dspTime - pauseTime;
         EventManager.StopListening("unpause", UnPause);
         EventManager.StartListening("pause", Pause);
     }
@@ -105,14 +111,14 @@ public class Conductor : MonoBehaviour
 
     public float getBeatFromSongPosition(float pos)
     {
-        return (pos / 1000f - offset) / beatDuration;
+        return (pos / 1000f) / beatDuration;
     }
 
     public float getBpm() {
         return bpm;
     }
 
-    public bool checkBeat(float beat)
+    public int checkBeat(float beat)
     {
         // Alternatively instead of returning a bool we can return the # of points
         if (Mathf.Abs(songPositionInBeats - beat) < okThreshold) {
@@ -121,24 +127,28 @@ public class Conductor : MonoBehaviour
                 if (Mathf.Abs(songPositionInBeats - beat) < perfectThreshold)
                 {
                     Debug.Log("Perfect!");
+                    return 100;
                 }
                 else if (songPositionInBeats - beat < 0) {
                     Debug.Log("Good - Early!");
                 }
                 else { Debug.Log("Good - Late!"); }
+                return 75;
             }
             else if (songPositionInBeats - beat < 0)
             {
                 Debug.Log("OK - Early!");
             }
             else { Debug.Log("OK - Late!"); }
-            return true;
+            return 50;
         }
         else if (songPositionInBeats - beat < 0)
         {
             Debug.Log("Miss - Early!");
         }
-        else { Debug.Log("Miss - Late!"); }
-        return false;
+        else { 
+            Debug.Log("Miss - Late!");
+        }
+        return -10;
     }
 }
