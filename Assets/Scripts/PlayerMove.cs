@@ -5,12 +5,17 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     public static float speed = 5.0f;
-    private float lastBeat;
+    //private float lastBeat;
 
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
-        lastBeat = 0.0f;
+        EventManager.StartListening("reset", Reset);
+    }
+
+    private void Reset()
+    {
+        transform.position = new Vector3(0, 0, 0);
     }
 
     // Update is called once per frame

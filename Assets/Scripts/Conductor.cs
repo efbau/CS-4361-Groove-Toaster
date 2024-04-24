@@ -18,6 +18,7 @@ public class Conductor : MonoBehaviour
     private float okThreshold;
     private float goodThreshold;
     private float perfectThreshold;
+    private bool paused = false;
 
     private static Conductor _instance;
 
@@ -38,6 +39,9 @@ public class Conductor : MonoBehaviour
         okThreshold = 0.7f;
         goodThreshold = 0.4f;
         perfectThreshold = 0.1f;
+
+        EventManager.StartListening("reset", Reset);
+        EventManager.StartListening("pause", Pause);
 
         //set up instance
         if (_instance != null && _instance != this)
@@ -60,6 +64,35 @@ public class Conductor : MonoBehaviour
     private void Update() {
         songPosition = (float)(AudioSettings.dspTime - dspTimeOnPlay) - offset;
         songPositionInBeats = songPosition / beatDuration;
+    }
+
+    private void Reset()
+    {
+        musicSource.Stop();
+        musicSource = GetComponent<AudioSource>();
+        dspTimeOnPlay = (float)AudioSettings.dspTime;
+        if (paused)
+        {
+            EventManager.StopListening("unpause", Pause);
+            EventManager.StartListening("pause", Pause);
+            paused = false;
+        }
+        musicSource.Play();
+    }
+
+    private void Pause()
+    {
+        paused = true;
+        musicSource.Pause(); 
+        EventManager.StopListening("pause", Pause);
+        EventManager.StartListening("unpause", UnPause);
+    }
+    private void UnPause()
+    {
+        paused = false;
+        musicSource.Play();
+        EventManager.StopListening("unpause", UnPause);
+        EventManager.StartListening("pause", Pause);
     }
 
     public float getSongPosition() {

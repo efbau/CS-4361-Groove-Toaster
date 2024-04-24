@@ -16,6 +16,17 @@ public class NoteManager : MonoBehaviour
     void Start()
     {
         _instance = this;
+        EventManager.StartListening("reset", Reset);
+    }
+
+    private void Reset()
+    {
+        for (int i = 0; i < tappableObjects.Length; i++)
+        {
+            tappableObjects[i].didHit = false;
+        }
+        currentNote = 0;
+        ResetNotes();
     }
 
     public void loadNotes(float[] floatData)
