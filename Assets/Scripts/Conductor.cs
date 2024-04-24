@@ -33,7 +33,7 @@ public class Conductor : MonoBehaviour
 
         //set song params
         bpm = 72.5f;
-        offset = 3.356f;
+        offset = .0196f;
         beatDuration = 60f / bpm;
         beatsPerBar = 4f;
 

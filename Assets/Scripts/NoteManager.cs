@@ -37,7 +37,7 @@ public class NoteManager : MonoBehaviour
         {
             float beat = Conductor.instance.getBeatFromSongPosition(floatData[i]);
             beats.Add(beat);
-            GameObject newNote = Instantiate(Prefab, new Vector3(0,0, beat*PlayerMove.speed), new Quaternion());
+            GameObject newNote = Instantiate(Prefab, new Vector3(0,0, (beat+2f)*PlayerMove.speed), new Quaternion());
             TappableObject tappable = newNote.GetComponent<TappableObject>();
             tappable.Initialize(beat);
             tappableObjects[i] = tappable;
