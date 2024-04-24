@@ -13,5 +13,11 @@ public class GameInputManager : MonoBehaviour {
             //Debug.Log("x");
             EventManager.TriggerEvent(KeyCode.X.ToString());
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            //Debug.Log("Space");
+            EventManager.TriggerEvent(KeyCode.Space.ToString());
+        }
     }
 }

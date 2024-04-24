@@ -70,6 +70,11 @@ public class Conductor : MonoBehaviour
         return songPositionInBeats;
     }
 
+    public float getBeatFromSongPosition(float pos)
+    {
+        return (pos / 1000f - offset) / beatDuration;
+    }
+
     public float getBpm() {
         return bpm;
     }
@@ -77,26 +82,26 @@ public class Conductor : MonoBehaviour
     public bool checkBeat(float beat)
     {
         // Alternatively instead of returning a bool we can return the # of points
-        if (Mathf.Abs(songPosition - beat) < okThreshold) {
-            if (Mathf.Abs(songPosition - beat) < goodThreshold)
+        if (Mathf.Abs(songPositionInBeats - beat) < okThreshold) {
+            if (Mathf.Abs(songPositionInBeats - beat) < goodThreshold)
             {
-                if (Mathf.Abs(songPosition - beat) < perfectThreshold)
+                if (Mathf.Abs(songPositionInBeats - beat) < perfectThreshold)
                 {
                     Debug.Log("Perfect!");
                 }
-                else if (songPosition - beat < 0) {
+                else if (songPositionInBeats - beat < 0) {
                     Debug.Log("Good - Early!");
                 }
                 else { Debug.Log("Good - Late!"); }
             }
-            else if (songPosition - beat < 0)
+            else if (songPositionInBeats - beat < 0)
             {
                 Debug.Log("OK - Early!");
             }
             else { Debug.Log("OK - Late!"); }
             return true;
         }
-        else if (songPosition - beat < 0)
+        else if (songPositionInBeats - beat < 0)
         {
             Debug.Log("Miss - Early!");
         }

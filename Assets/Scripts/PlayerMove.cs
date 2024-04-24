@@ -4,27 +4,28 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    private float lastBeat = 0f;
-    // Start is called before the first frame update
-    void Start() {
+    public static float speed = 5.0f;
+    private float lastBeat;
+
+    void Start()
+    {
         transform.position = new Vector3(0, 0, 0);
+        lastBeat = 0.0f;
     }
 
     // Update is called once per frame
-    void Update() {
-        float currentBeat = Conductor.instance.getSongPosition();
-        float elapsed = currentBeat - lastBeat;
+    void Update()
+    {
+        /*float currentBeat = Conductor.instance.getSongPosition();
 
-        if (elapsed > 0) {
-            transform.position += transform.forward * elapsed;
-        }
+        transform.position = Vector3.Lerp(
+        transform.position,
+        new Vector3(0, 0, currentBeat*speed),
+        currentBeat - lastBeat
+        );
 
-        lastBeat = currentBeat;
+        lastBeat = currentBeat;*/
+        transform.position = new Vector3(0, 0, Conductor.instance.getSongPositionInBeats()*speed);
     }
-
-    //public float speed = 5f;
-
-    //void Update() {
-    //    transform.Translate(Vector3.forward * speed * Time.deltaTime);
-    //}
 }
+

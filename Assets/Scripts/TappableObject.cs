@@ -9,10 +9,17 @@ public class TappableObject : MonoBehaviour
     public bool active = true;
     public KeyCode key;
 
+    public void Initialize(float beat, bool active = false, KeyCode key = KeyCode.Space)
+    {
+        this.beat = beat;
+        this.active = active;
+        this.key = key;
+    }
 
     void Awake()
     {
-        Activate();
+       if (active)
+            Activate();
     }
 
     public void Activate()
@@ -34,11 +41,14 @@ public class TappableObject : MonoBehaviour
             // Stop listening once you get a hit
             Deactivate();
             didHit = true;
-            Debug.Log("["+ key.ToString()+"] Tapped at: " + Conductor.instance.getSongPosition().ToString());
+            // Display hit animation
+            //Debug.Log("["+ key.ToString()+"] Tapped at: " + Conductor.instance.getSongPosition().ToString());
         }
         else
         {
-            Debug.Log("["+key.ToString()+"] Tapped at: " + Conductor.instance.getSongPosition().ToString());
+            //Debug.Log("["+key.ToString()+"] Tapped at: " + Conductor.instance.getSongPosition().ToString());
+            // Display miss animation
         }
+        NoteManager.instance.ResetNotes();
     }
 }

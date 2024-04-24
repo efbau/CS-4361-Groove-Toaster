@@ -12,7 +12,7 @@ public class Spawn : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         LoadTextFile("beatmap_clean.txt");
-        StartCoroutine(SpawnObjects());
+        //StartCoroutine(SpawnObjects());
     }
 
     // Update is called once per frame
@@ -29,14 +29,15 @@ public class Spawn : MonoBehaviour {
             for (int i = 0; i < beatmapData.Length; i++) {
                 floatData[i] = float.Parse(beatmapData[i]);
             }
+            NoteManager.instance.loadNotes(floatData);
         }
     }
 
     IEnumerator SpawnObjects() {
         //yield return new WaitForSeconds(3.356f);
-        float startTime = Time.time;
+        float startTime = Conductor.instance.getSongPosition();
         foreach (float spawnTime in floatData) {
-            float elapsedTime = (Time.time - startTime) * 1000f; // Calculate the elapsed time in milliseconds
+            float elapsedTime = (Conductor.instance.getSongPosition() - startTime) * 1000f; // Calculate the elapsed time in milliseconds
             float waitTime = spawnTime - elapsedTime; // Calculate the time to wait before spawning
             yield return new WaitForSeconds(waitTime / 1000f - 11);
             Instantiate(Prefab, SpawnPoint.position, SpawnPoint.rotation);
