@@ -6,14 +6,12 @@ public class PlayerMove : MonoBehaviour
 {
     private float lastBeat = 0f;
     // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         transform.position = new Vector3(0, 0, 0);
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
         float currentBeat = Conductor.instance.getSongPosition();
         float elapsed = currentBeat - lastBeat;
 
@@ -23,4 +21,10 @@ public class PlayerMove : MonoBehaviour
 
         lastBeat = currentBeat;
     }
+
+    //public float speed = 5f;
+
+    //void Update() {
+    //    transform.Translate(Vector3.forward * speed * Time.deltaTime);
+    //}
 }
