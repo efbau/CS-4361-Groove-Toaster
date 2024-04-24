@@ -39,8 +39,9 @@ public class TappableObject : MonoBehaviour
         if (Conductor.instance.checkBeat(beat) > 0)
         {
             // Stop listening once you get a hit
-            Deactivate();
             didHit = true;
+            Deactivate();
+
             // Display hit animation
             //Debug.Log("["+ key.ToString()+"] Tapped at: " + Conductor.instance.getSongPosition().ToString());
         }
@@ -54,11 +55,16 @@ public class TappableObject : MonoBehaviour
 
     private void OnTriggerExit(Collider collision)
     {
+        Invoke("DidMissNote", 0.005f);
+        
+    }
+
+    private void DidMissNote()
+    {
         if (!didHit)
         {
             NoteManager.instance.ResetNotes();
-            Debug.Log("Miss - Late!");
-            // -10 points
+            Debug.Log("Miss - Passed Player");
         }
     }
 }

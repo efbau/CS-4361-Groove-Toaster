@@ -37,7 +37,7 @@ public class NoteManager : MonoBehaviour
         {
             float beat = Conductor.instance.getBeatFromSongPosition(floatData[i]);
             beats.Add(beat);
-            GameObject newNote = Instantiate(Prefab, new Vector3(0,0, (beat+2f)*PlayerMove.speed), new Quaternion());
+            GameObject newNote = Instantiate(Prefab, new Vector3(0,0, (beat)*PlayerMove.speed), Quaternion.identity);
             TappableObject tappable = newNote.GetComponent<TappableObject>();
             tappable.Initialize(beat);
             tappableObjects[i] = tappable;
@@ -67,6 +67,13 @@ public class NoteManager : MonoBehaviour
 
         int index = FindNext(thisBeat);
         //Debug.Log("Reset: "+index.ToString());
+        if (index < 0)
+        {
+            //End of level
+            //EventManager.instance.Invoke("end");
+            return;
+        }
+
 
         for (int i = 0; i < tappableObjects.Length; i++)
         {

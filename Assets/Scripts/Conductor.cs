@@ -111,7 +111,7 @@ public class Conductor : MonoBehaviour
 
     public float getBeatFromSongPosition(float pos)
     {
-        return (pos / 1000f) / beatDuration;
+        return (pos / 1000f - offset) / beatDuration;
     }
 
     public float getBpm() {
