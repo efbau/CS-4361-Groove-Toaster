@@ -52,7 +52,7 @@ public class TappableObject : MonoBehaviour
             // Display miss animation
         }
         NoteManager.instance.ResetNotes();
-        IntEventManager.TriggerEvent("updateScore", points);
+        //IntEventManager.TriggerEvent("updateScore", points);
     }
 
     private void OnTriggerExit(Collider collision)
@@ -66,7 +66,7 @@ public class TappableObject : MonoBehaviour
         if (!didHit)
         {
             NoteManager.instance.ResetNotes();
-            IntEventManager.TriggerEvent("updateScore", -10);
+            //IntEventManager.TriggerEvent("updateScore", -10);
             Debug.Log("Miss - Passed Player");
         }
     }
