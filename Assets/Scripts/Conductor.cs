@@ -21,6 +21,11 @@ public class Conductor : MonoBehaviour
     private bool paused = false;
     private float pauseTime;
 
+    public int perfect = 0;
+    public int good = 0;
+    public int ok = 0;
+    public int miss = 0;
+
     private static Conductor _instance;
 
     public static Conductor instance { get { return _instance; } }
@@ -120,36 +125,36 @@ public class Conductor : MonoBehaviour
         return bpm;
     }
 
-    public int checkBeat(float beat)
-    {
+    public int checkBeat(float beat) {
         // Alternatively instead of returning a bool we can return the # of points
         if (Mathf.Abs(songPositionInBeats - beat) < okThreshold) {
-            if (Mathf.Abs(songPositionInBeats - beat) < goodThreshold)
-            {
-                if (Mathf.Abs(songPositionInBeats - beat) < perfectThreshold)
-                {
+            if (Mathf.Abs(songPositionInBeats - beat) < goodThreshold) {
+                if (Mathf.Abs(songPositionInBeats - beat) < perfectThreshold) {
                     Debug.Log("Perfect!");
-                    return 50;
+                    perfect++;
+                    return 100;
                 }
                 else if (songPositionInBeats - beat < 0) {
                     Debug.Log("Good - Early!");
+                    good++;
                 }
-                else { Debug.Log("Good - Late!"); }
-                return 30;
+                else { Debug.Log("Good - Late!"); good++; }
+                return 75;
             }
-            else if (songPositionInBeats - beat < 0)
-            {
+            else if (songPositionInBeats - beat < 0) {
                 Debug.Log("OK - Early!");
+                ok++;
             }
-            else { Debug.Log("OK - Late!"); }
-            return 10;
+            else { Debug.Log("OK - Late!"); ok++; }
+            return 50;
         }
-        else if (songPositionInBeats - beat < 0)
-        {
+        else if (songPositionInBeats - beat < 0) {
             Debug.Log("Miss - Early!");
+            miss++;
         }
-        else { 
+        else {
             Debug.Log("Miss - Late!");
+            miss++;
         }
         return -10;
     }

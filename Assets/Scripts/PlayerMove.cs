@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMove : MonoBehaviour
 {
@@ -31,6 +32,11 @@ public class PlayerMove : MonoBehaviour
 
         lastBeat = currentBeat;*/
         transform.position = new Vector3(0, 0, Conductor.instance.getSongPositionInBeats()*speed);
+    }
+    void OnTriggerEnter(Collider other) {
+        if (other.CompareTag("Result")) {
+            SceneManager.LoadScene(2);
+        }
     }
 }
 
