@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NoteManager : MonoBehaviour
 {
+    [SerializeField] float beatDelay;
     public TappableObject[] tappableObjects;
     public List<float> beats;
     private static NoteManager _instance;
@@ -15,6 +16,7 @@ public class NoteManager : MonoBehaviour
 
     void Start()
     {
+        beatDelay = 2.2f;
         _instance = this;
         EventManager.StartListening("reset", Reset);
     }
@@ -35,9 +37,9 @@ public class NoteManager : MonoBehaviour
         tappableObjects = new TappableObject[floatData.Length];
         for (int i = 0; i < tappableObjects.Length; i++)
         {
-            float beat = Conductor.instance.getBeatFromSongPosition(floatData[i]);
+            float beat = Conductor.instance.getBeatFromSongPosition(floatData[i]) + beatDelay;
             beats.Add(beat);
-            GameObject newNote = Instantiate(Prefab, new Vector3(0,0, (beat+3.5f)*PlayerMove.speed), Quaternion.identity);
+            GameObject newNote = Instantiate(Prefab, new Vector3(0,0, beat*PlayerMove.speed), new Quaternion());
             TappableObject tappable = newNote.GetComponent<TappableObject>();
             tappable.Initialize(beat);
             tappableObjects[i] = tappable;

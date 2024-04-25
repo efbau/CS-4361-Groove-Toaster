@@ -12,6 +12,7 @@ public class Spawn : MonoBehaviour {
     // Start is called before the first frame update
     void Start() {
         LoadTextFile("beatmap_clean.txt");
+        EventManager.TriggerEvent("reset");
         //StartCoroutine(SpawnObjects());
     }
 
@@ -33,6 +34,7 @@ public class Spawn : MonoBehaviour {
         }
     }
 
+    //TODO: Delete, dead code
     IEnumerator SpawnObjects() {
         //yield return new WaitForSeconds(3.356f);
         float startTime = Conductor.instance.getSongPosition();

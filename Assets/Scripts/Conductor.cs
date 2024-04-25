@@ -28,12 +28,9 @@ public class Conductor : MonoBehaviour
         //load AudioSource
         musicSource = GetComponent<AudioSource>();
 
-        //record dspTime when song is played
-        dspTimeOnPlay = (float)AudioSettings.dspTime;
-
         //set song params
         bpm = 72.5f;
-        offset = .0196f;
+        offset = 0.0196f;
         beatDuration = 60f / bpm;
         beatsPerBar = 4f;
 
@@ -57,8 +54,13 @@ public class Conductor : MonoBehaviour
 
     // Start is called before the first frame update
     private void Start() {
+        /*
+        //record dspTime when song is played
+        dspTimeOnPlay = (float)AudioSettings.dspTime;
+
         //start music
         musicSource.Play();
+        */
     }
 
     //updates current song position (in beats and seconds) on every frame
