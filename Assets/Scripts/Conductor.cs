@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Conductor : MonoBehaviour
-{
+public class Conductor : MonoBehaviour {
     //TODO: event handler to retrieve dspTime when AudioController plays song - at start?
     [SerializeField] private float offset;
     [SerializeField] private float bpm;
@@ -21,6 +20,11 @@ public class Conductor : MonoBehaviour
     private bool paused = false;
     private float pauseTime;
 
+    public int perfect = 0;
+    public int good = 0;
+    public int ok = 0;
+    public int miss = 0;
+
     private static Conductor _instance;
 
     public static Conductor instance { get { return _instance; } }
@@ -37,20 +41,18 @@ public class Conductor : MonoBehaviour
         beatDuration = 60f / bpm;
         beatsPerBar = 4f;
 
-        okThreshold = 0.3f;
-        goodThreshold = 0.2f;
+        okThreshold = 0.7f;
+        goodThreshold = 0.4f;
         perfectThreshold = 0.1f;
 
         EventManager.StartListening("reset", Reset);
         EventManager.StartListening("pause", Pause);
 
         //set up instance
-        if (_instance != null && _instance != this)
-        {
+        if (_instance != null && _instance != this) {
             Destroy(this.gameObject);
         }
-        else
-        {
+        else {
             _instance = this;
         }
     }
@@ -63,20 +65,17 @@ public class Conductor : MonoBehaviour
 
     //updates current song position (in beats and seconds) on every frame
     private void Update() {
-        if (!paused)
-        {
+        if (!paused) {
             songPosition = (float)(AudioSettings.dspTime - dspTimeOnPlay) - offset;
             songPositionInBeats = songPosition / beatDuration;
         }
     }
 
-    private void Reset()
-    {
+    private void Reset() {
         musicSource.Stop();
         musicSource = GetComponent<AudioSource>();
         dspTimeOnPlay = (float)AudioSettings.dspTime;
-        if (paused)
-        {
+        if (paused) {
             EventManager.StopListening("unpause", UnPause);
             EventManager.StartListening("pause", Pause);
             paused = false;
@@ -84,16 +83,14 @@ public class Conductor : MonoBehaviour
         musicSource.Play();
     }
 
-    private void Pause()
-    {
+    private void Pause() {
         paused = true;
         musicSource.Pause();
         pauseTime = (float)AudioSettings.dspTime;
         EventManager.StopListening("pause", Pause);
         EventManager.StartListening("unpause", UnPause);
     }
-    private void UnPause()
-    {
+    private void UnPause() {
         paused = false;
         musicSource.Play();
         dspTimeOnPlay += (float)AudioSettings.dspTime - pauseTime;
@@ -109,8 +106,7 @@ public class Conductor : MonoBehaviour
         return songPositionInBeats;
     }
 
-    public float getBeatFromSongPosition(float pos)
-    {
+    public float getBeatFromSongPosition(float pos) {
         return (pos / 1000f - offset) / beatDuration;
     }
 
@@ -118,36 +114,36 @@ public class Conductor : MonoBehaviour
         return bpm;
     }
 
-    public int checkBeat(float beat)
-    {
+    public int checkBeat(float beat) {
         // Alternatively instead of returning a bool we can return the # of points
         if (Mathf.Abs(songPositionInBeats - beat) < okThreshold) {
-            if (Mathf.Abs(songPositionInBeats - beat) < goodThreshold)
-            {
-                if (Mathf.Abs(songPositionInBeats - beat) < perfectThreshold)
-                {
+            if (Mathf.Abs(songPositionInBeats - beat) < goodThreshold) {
+                if (Mathf.Abs(songPositionInBeats - beat) < perfectThreshold) {
                     Debug.Log("Perfect!");
-                    return 50;
+                    perfect++;
+                    return 100;
                 }
                 else if (songPositionInBeats - beat < 0) {
                     Debug.Log("Good - Early!");
+                    good++;
                 }
-                else { Debug.Log("Good - Late!"); }
-                return 30;
+                else { Debug.Log("Good - Late!"); good++; }
+                return 75;
             }
-            else if (songPositionInBeats - beat < 0)
-            {
+            else if (songPositionInBeats - beat < 0) {
                 Debug.Log("OK - Early!");
+                ok++;
             }
-            else { Debug.Log("OK - Late!"); }
-            return 10;
+            else { Debug.Log("OK - Late!"); ok++; }
+            return 50;
         }
-        else if (songPositionInBeats - beat < 0)
-        {
+        else if (songPositionInBeats - beat < 0) {
             Debug.Log("Miss - Early!");
+            miss++;
         }
-        else { 
+        else {
             Debug.Log("Miss - Late!");
+            miss++;
         }
         return -10;
     }
