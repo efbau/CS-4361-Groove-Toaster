@@ -36,7 +36,8 @@ public class TappableObject : MonoBehaviour
 
     private void CheckTap()
     {
-        if (Conductor.instance.checkBeat(beat) > 0)
+        int points = Conductor.instance.checkBeat(beat);
+        if (points > 0)
         {
             // Stop listening once you get a hit
             didHit = true;
@@ -51,6 +52,7 @@ public class TappableObject : MonoBehaviour
             // Display miss animation
         }
         NoteManager.instance.ResetNotes();
+        IntEventManager.TriggerEvent("updateScore", points);
     }
 
     private void OnTriggerExit(Collider collision)
@@ -64,6 +66,7 @@ public class TappableObject : MonoBehaviour
         if (!didHit)
         {
             NoteManager.instance.ResetNotes();
+            IntEventManager.TriggerEvent("updateScore", -10);
             Debug.Log("Miss - Passed Player");
         }
     }
