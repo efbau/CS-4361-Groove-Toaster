@@ -37,8 +37,8 @@ public class Conductor : MonoBehaviour
         beatDuration = 60f / bpm;
         beatsPerBar = 4f;
 
-        okThreshold = 0.7f;
-        goodThreshold = 0.4f;
+        okThreshold = 0.3f;
+        goodThreshold = 0.2f;
         perfectThreshold = 0.1f;
 
         EventManager.StartListening("reset", Reset);
@@ -127,20 +127,20 @@ public class Conductor : MonoBehaviour
                 if (Mathf.Abs(songPositionInBeats - beat) < perfectThreshold)
                 {
                     Debug.Log("Perfect!");
-                    return 100;
+                    return 50;
                 }
                 else if (songPositionInBeats - beat < 0) {
                     Debug.Log("Good - Early!");
                 }
                 else { Debug.Log("Good - Late!"); }
-                return 75;
+                return 30;
             }
             else if (songPositionInBeats - beat < 0)
             {
                 Debug.Log("OK - Early!");
             }
             else { Debug.Log("OK - Late!"); }
-            return 50;
+            return 10;
         }
         else if (songPositionInBeats - beat < 0)
         {
