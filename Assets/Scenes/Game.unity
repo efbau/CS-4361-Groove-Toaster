@@ -495,8 +495,8 @@ GameObject:
   - component: {fileID: 306874846}
   - component: {fileID: 306874845}
   m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
+  m_Name: LoadScoreSystem
+  m_TagString: Result
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
