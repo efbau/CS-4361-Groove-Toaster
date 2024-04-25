@@ -135,6 +135,9 @@ MonoBehaviour:
   didHit: 0
   active: 1
   key: 0
+  hitParticlePrefab: {fileID: 8350486249539074080, guid: a50dd6eed4935e74196787d0ffa2b746,
+    type: 3}
+  hitSound: {fileID: 8300000, guid: 49bedc64458102b49861302731143bd7, type: 3}
 --- !u!64 &-6390246587033500405
 MeshCollider:
   m_ObjectHideFlags: 0

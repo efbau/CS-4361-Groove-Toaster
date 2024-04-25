@@ -9,6 +9,11 @@ public class TappableObject : MonoBehaviour
     public bool active = true;
     public KeyCode key;
 
+    [SerializeField]
+    private ParticleSystem hitParticlePrefab = null;
+    [SerializeField]
+    private AudioClip hitSound = null;
+
     public void Initialize(float beat, bool active = false, KeyCode key = KeyCode.Space)
     {
         this.beat = beat;
@@ -41,7 +46,11 @@ public class TappableObject : MonoBehaviour
         {
             // Stop listening once you get a hit
             didHit = true;
-            Deactivate();
+            //Deactivate();
+            ParticleSystem newParticle = Instantiate(hitParticlePrefab, transform.position, Quaternion.identity);
+            newParticle.Play();
+            AudioSource.PlayClipAtPoint(hitSound, transform.position, 1);
+            Destroy(gameObject);
 
             // Display hit animation
             //Debug.Log("["+ key.ToString()+"] Tapped at: " + Conductor.instance.getSongPosition().ToString());

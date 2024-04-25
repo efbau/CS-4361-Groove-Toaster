@@ -42,8 +42,8 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _GridColor: {r: 0.6484343, g: 0.5490565, b: 1, a: 0}
-    - _Tiling: {r: 2, g: 2, b: 0, a: 0}
+    - _GridColor: {r: 0.4037736, g: 0.07846919, b: 0.116089776, a: 0}
+    - _Tiling: {r: 2, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &5555677736335139150
 MonoBehaviour:
