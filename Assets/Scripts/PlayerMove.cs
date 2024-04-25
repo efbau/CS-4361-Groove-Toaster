@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class PlayerMove : MonoBehaviour
 {
-    private float lastBeat = 0f;
-    // Start is called before the first frame update
+    public static float speed = 5.0f;
+    //private float lastBeat;
+
     void Start()
+    {
+        transform.position = new Vector3(0, 0, 0);
+        EventManager.StartListening("reset", Reset);
+    }
+
+    private void Reset()
     {
         transform.position = new Vector3(0, 0, 0);
     }
@@ -14,13 +21,16 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float currentBeat = Conductor.instance.getSongPosition();
-        float elapsed = currentBeat - lastBeat;
+        /*float currentBeat = Conductor.instance.getSongPosition();
 
-        if (elapsed > 0) {
-            transform.position += transform.forward * elapsed;
-        }
+        transform.position = Vector3.Lerp(
+        transform.position,
+        new Vector3(0, 0, currentBeat*speed),
+        currentBeat - lastBeat
+        );
 
-        lastBeat = currentBeat;
+        lastBeat = currentBeat;*/
+        transform.position = new Vector3(0, 0, Conductor.instance.getSongPositionInBeats()*speed);
     }
 }
+

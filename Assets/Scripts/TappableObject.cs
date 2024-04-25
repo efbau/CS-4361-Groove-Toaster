@@ -9,10 +9,17 @@ public class TappableObject : MonoBehaviour
     public bool active = true;
     public KeyCode key;
 
+    public void Initialize(float beat, bool active = false, KeyCode key = KeyCode.Space)
+    {
+        this.beat = beat;
+        this.active = active;
+        this.key = key;
+    }
 
     void Awake()
     {
-        Activate();
+       if (active)
+            Activate();
     }
 
     public void Activate()
@@ -29,16 +36,38 @@ public class TappableObject : MonoBehaviour
 
     private void CheckTap()
     {
-        if (Conductor.instance.checkBeat(beat))
+        int points = Conductor.instance.checkBeat(beat);
+        if (points > 0)
         {
             // Stop listening once you get a hit
-            Deactivate();
             didHit = true;
-            Debug.Log("["+ key.ToString()+"] Tapped at: " + Conductor.instance.getSongPosition().ToString());
+            Deactivate();
+
+            // Display hit animation
+            //Debug.Log("["+ key.ToString()+"] Tapped at: " + Conductor.instance.getSongPosition().ToString());
         }
         else
         {
-            Debug.Log("["+key.ToString()+"] Tapped at: " + Conductor.instance.getSongPosition().ToString());
+            //Debug.Log("["+key.ToString()+"] Tapped at: " + Conductor.instance.getSongPosition().ToString());
+            // Display miss animation
+        }
+        NoteManager.instance.ResetNotes();
+        IntEventManager.TriggerEvent("updateScore", points);
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        Invoke("DidMissNote", 0.005f);
+        
+    }
+
+    private void DidMissNote()
+    {
+        if (!didHit)
+        {
+            NoteManager.instance.ResetNotes();
+            IntEventManager.TriggerEvent("updateScore", -10);
+            Debug.Log("Miss - Passed Player");
         }
     }
 }
