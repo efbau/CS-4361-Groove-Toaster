@@ -8,6 +8,8 @@ public class CameraFollow : MonoBehaviour
 
     public bool isCustomOffset;
     public Vector3 offset;
+    public bool isCustomRotation;
+    public Quaternion rotation;
 
     public float smoothSpeed = 0.1f;
     private Vector3 velocity = Vector3.zero;
@@ -20,7 +22,13 @@ public class CameraFollow : MonoBehaviour
         {
             offset = transform.position - target.position;
         }
-        transform.LookAt(target);
+        if (!isCustomRotation)
+        {
+            transform.LookAt(target);
+        }
+        else { 
+            transform.rotation = rotation; 
+        }
     }
 
     private void LateUpdate()

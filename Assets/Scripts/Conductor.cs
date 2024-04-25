@@ -18,6 +18,8 @@ public class Conductor : MonoBehaviour
     private float okThreshold;
     private float goodThreshold;
     private float perfectThreshold;
+    private bool paused = false;
+    private float pauseTime;
 
     private static Conductor _instance;
 
@@ -31,13 +33,16 @@ public class Conductor : MonoBehaviour
 
         //set song params
         bpm = 72.5f;
-        offset = 3.356f;
+        offset = .0196f;
         beatDuration = 60f / bpm;
         beatsPerBar = 4f;
 
         okThreshold = 0.7f;
         goodThreshold = 0.4f;
         perfectThreshold = 0.1f;
+
+        EventManager.StartListening("reset", Reset);
+        EventManager.StartListening("pause", Pause);
 
         //set up instance
         if (_instance != null && _instance != this)
@@ -58,8 +63,42 @@ public class Conductor : MonoBehaviour
 
     //updates current song position (in beats and seconds) on every frame
     private void Update() {
-        songPosition = (float)(AudioSettings.dspTime - dspTimeOnPlay) - offset;
-        songPositionInBeats = songPosition / beatDuration;
+        if (!paused)
+        {
+            songPosition = (float)(AudioSettings.dspTime - dspTimeOnPlay) - offset;
+            songPositionInBeats = songPosition / beatDuration;
+        }
+    }
+
+    private void Reset()
+    {
+        musicSource.Stop();
+        musicSource = GetComponent<AudioSource>();
+        dspTimeOnPlay = (float)AudioSettings.dspTime;
+        if (paused)
+        {
+            EventManager.StopListening("unpause", UnPause);
+            EventManager.StartListening("pause", Pause);
+            paused = false;
+        }
+        musicSource.Play();
+    }
+
+    private void Pause()
+    {
+        paused = true;
+        musicSource.Pause();
+        pauseTime = (float)AudioSettings.dspTime;
+        EventManager.StopListening("pause", Pause);
+        EventManager.StartListening("unpause", UnPause);
+    }
+    private void UnPause()
+    {
+        paused = false;
+        musicSource.Play();
+        dspTimeOnPlay += (float)AudioSettings.dspTime - pauseTime;
+        EventManager.StopListening("unpause", UnPause);
+        EventManager.StartListening("pause", Pause);
     }
 
     public float getSongPosition() {
@@ -70,37 +109,46 @@ public class Conductor : MonoBehaviour
         return songPositionInBeats;
     }
 
+    public float getBeatFromSongPosition(float pos)
+    {
+        return (pos / 1000f - offset) / beatDuration;
+    }
+
     public float getBpm() {
         return bpm;
     }
 
-    public bool checkBeat(float beat)
+    public int checkBeat(float beat)
     {
         // Alternatively instead of returning a bool we can return the # of points
-        if (Mathf.Abs(songPosition - beat) < okThreshold) {
-            if (Mathf.Abs(songPosition - beat) < goodThreshold)
+        if (Mathf.Abs(songPositionInBeats - beat) < okThreshold) {
+            if (Mathf.Abs(songPositionInBeats - beat) < goodThreshold)
             {
-                if (Mathf.Abs(songPosition - beat) < perfectThreshold)
+                if (Mathf.Abs(songPositionInBeats - beat) < perfectThreshold)
                 {
                     Debug.Log("Perfect!");
+                    return 100;
                 }
-                else if (songPosition - beat < 0) {
+                else if (songPositionInBeats - beat < 0) {
                     Debug.Log("Good - Early!");
                 }
                 else { Debug.Log("Good - Late!"); }
+                return 75;
             }
-            else if (songPosition - beat < 0)
+            else if (songPositionInBeats - beat < 0)
             {
                 Debug.Log("OK - Early!");
             }
             else { Debug.Log("OK - Late!"); }
-            return true;
+            return 50;
         }
-        else if (songPosition - beat < 0)
+        else if (songPositionInBeats - beat < 0)
         {
             Debug.Log("Miss - Early!");
         }
-        else { Debug.Log("Miss - Late!"); }
-        return false;
+        else { 
+            Debug.Log("Miss - Late!");
+        }
+        return -10;
     }
 }
